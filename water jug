@@ -1,0 +1,71 @@
+from collections import deque
+
+
+class State:
+    def __init__(self, x, y):
+        self.x = x  
+        self.y = y  
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+
+class Action:
+    def __init__(self, name, precond, effect):
+        self.name = name      
+        self.precond = precond  
+        self.effect = effect   
+
+    def is_possible(self, state):
+        return self.precond(state)
+
+    def apply(self, state):
+        return self.effect(state)
+
+
+actions = [
+    Action("Fill jug X", lambda s: s.x < jug_x_capacity, lambda s: State(jug_x_capacity, s.y)),
+    Action("Fill jug Y", lambda s: s.y < jug_y_capacity, lambda s: State(s.x, jug_y_capacity)),
+    Action("Empty jug X", lambda s: s.x > 0, lambda s: State(0, s.y)),
+    Action("Empty jug Y", lambda s: s.y > 0, lambda s: State(s.x, 0)),
+    Action("Pour from X to Y", lambda s: s.x > 0 and s.y < jug_y_capacity, lambda s: State(max(0, s.x - (jug_y_capacity - s.y)), min(jug_y_capacity, s.y + s.x))),
+    Action("Pour from Y to X", lambda s: s.y > 0 and s.x < jug_x_capacity, lambda s: State(min(jug_x_capacity, s.x + s.y), max(0, s.y - (jug_x_capacity - s.x))))
+]
+
+
+jug_x_capacity = 4
+jug_y_capacity = 3
+goal_amount = 2
+
+def water_jug_problem():
+    initial_state = State(0, 0)
+    queue = deque([(initial_state, [])])
+    visited = set()
+
+    while queue:
+        current_state, path = queue.popleft()
+
+        if current_state in visited:
+            continue
+
+        visited.add(current_state)
+
+        if current_state.x == goal_amount or current_state.y == goal_amount:
+            print("Solution found:")
+            print("Steps to achieve the goal:")
+            for step in path:
+                print(step)
+            return
+
+        for action in actions:
+            if action.is_possible(current_state):
+                new_state = action.apply(current_state)
+                queue.append((new_state, path + [action.name]))
+
+    print("No solution found")
+
+
+water_jug_problem()
