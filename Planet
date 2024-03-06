@@ -1,0 +1,27 @@
+% Define facts about planets
+planet(mercury).
+planet(venus).
+planet(earth).
+planet(mars).
+planet(jupiter).
+planet(saturn).
+planet(uranus).
+planet(neptune).
+
+% Define facts about planets and their properties
+properties(mercury, [type(terrestrial), distance_from_sun(0.39), diameter(4879)]).
+properties(venus, [type(terrestrial), distance_from_sun(0.72), diameter(12104)]).
+properties(earth, [type(terrestrial), distance_from_sun(1), diameter(12756)]).
+properties(mars, [type(terrestrial), distance_from_sun(1.52), diameter(6792)]).
+properties(jupiter, [type(gas_giant), distance_from_sun(5.2), diameter(142984)]).
+properties(saturn, [type(gas_giant), distance_from_sun(9.58), diameter(120536)]).
+properties(uranus, [type(ice_giant), distance_from_sun(19.22), diameter(51118)]).
+properties(neptune, [type(ice_giant), distance_from_sun(30.05), diameter(49528)]).
+
+% Query to get properties of a planet
+get_properties(Planet, Properties) :-
+    properties(Planet, Properties).
+
+% Query to get all planets of a specific type
+planets_of_type(Type, Planets) :-
+    findall(Planet, (planet(Planet), properties(Planet, Properties), member(type(Type), Properties)), Planets).
