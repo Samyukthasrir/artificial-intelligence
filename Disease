@@ -1,0 +1,21 @@
+% Define symptoms and diseases
+symptom(fever).
+symptom(cough).
+symptom(rash).
+symptom(headache).
+
+disease(flu, [fever, cough]).
+disease(measles, [fever, cough, rash]).
+disease(migraine, [headache]).
+
+% Define rules for diagnosis
+diagnose(Disease) :-
+    symptom(Symptom),
+    has_symptom(Disease, Symptom),
+    write('You may have '), write(Disease), nl,
+    fail. % Stop after the first diagnosis
+
+% Helper predicate to check if a disease has a symptom
+has_symptom(Disease, Symptom) :-
+    disease(Disease, Symptoms),
+    member(Symptom, Symptoms).
