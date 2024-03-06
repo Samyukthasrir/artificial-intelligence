@@ -1,0 +1,39 @@
+% Define some example graph with nodes and their respective heuristic values
+heuristic(a, 5).
+heuristic(b, 4).
+heuristic(c, 3).
+heuristic(d, 2).
+heuristic(e, 1).
+
+% Define the edges between nodes
+edge(a, b, 1).
+edge(a, c, 2).
+edge(b, d, 3).
+edge(b, e, 4).
+edge(c, e, 3).
+
+% Best First Search algorithm implementation
+best_first_search(Start, Goal, Path) :-
+    best_first_search(Start, Goal, [Start], 0, Path).
+
+% Base case: goal node is reached
+best_first_search(Node, Node, Path, _, Path).
+
+% Recursive case
+best_first_search(Node, Goal, Path, Cost, FinalPath) :-
+    findall(NewNode, (edge(Node, NewNode, _), \+ member(NewNode, Path)), Children), % Find all unvisited child nodes
+    evaluate_nodes(Children, Goal, Path, [], EvaluatedNodes), % Evaluate the heuristic value of each child node
+    sort(1, @=<, EvaluatedNodes, SortedNodes), % Sort the evaluated nodes based on heuristic value
+    member(NextNode, SortedNodes), % Select the next node with the lowest heuristic value
+    edge(Node, NextNode, EdgeCost), % Determine the cost of reaching the next node
+    NewCost is Cost + EdgeCost,
+    best_first_search(NextNode, Goal, [NextNode|Path], NewCost, FinalPath).
+
+% Helper predicate to evaluate the heuristic value of each child node
+evaluate_nodes([], _, _, Acc, Acc).
+evaluate_nodes([Node|Rest], Goal, Path, Acc, EvaluatedNodes) :-
+    heuristic(Node, Heuristic),
+    length(Path, PathLength),
+    Cost is PathLength + Heuristic,
+    evaluate_nodes(Rest, Goal, Path, [(Node, Cost)|Acc], EvaluatedNodes).
+
