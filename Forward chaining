@@ -1,0 +1,12 @@
+% Define rules
+symptom(pain) :- injury.
+symptom(swelling) :- injury.
+symptom(fever) :- infection.
+
+% Define facts
+injury.
+infection.
+
+% Forward chaining inference
+infer_symptoms :- symptom(X), write('You may have '), write(X), nl, fail.
+infer_symptoms :- write('No more symptoms can be inferred.').
