@@ -1,0 +1,13 @@
+% Define facts about diseases and their corresponding diets
+diet(flu, ['Drink plenty of fluids', 'Eat light and easy-to-digest foods like soup', 'Avoid fatty or greasy foods']).
+diet(measles, ['Consume plenty of fluids such as water or juice', 'Eat soft, easy-to-swallow foods', 'Avoid spicy or acidic foods']).
+diet(migraine, ['Stay hydrated by drinking plenty of water', 'Eat regular meals to maintain blood sugar levels', 'Avoid trigger foods like chocolate, cheese, and caffeine']).
+
+% Define predicate to suggest diet based on disease
+suggest_diet(Disease, Diet) :-
+    diet(Disease, DietList),
+    member(Diet, DietList).
+
+% Example usage:
+% suggest_diet(flu, Diet).
+% This will suggest a diet for someone with flu.
