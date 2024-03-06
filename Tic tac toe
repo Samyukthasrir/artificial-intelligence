@@ -1,0 +1,66 @@
+class TicTacToe:
+    def __init__(self):
+        self.board = [' ']*9
+        self.current_player = 'X'
+
+    def print_board(self):
+        for i in range(0, 9, 3):
+            print(self.board[i], '|', self.board[i+1], '|', self.board[i+2])
+            if i < 6:
+                print('---------')
+
+    def make_move(self, position):
+        if self.board[position] == ' ':
+            self.board[position] = self.current_player
+            return True
+        else:
+            print("Invalid move! Try again.")
+            return False
+
+    def switch_player(self):
+        if self.current_player == 'X':
+            self.current_player = 'O'
+        else:
+            self.current_player = 'X'
+
+    def check_winner(self):
+        winning_combinations = [
+            (0, 1, 2), (3, 4, 5), (6, 7, 8),  # Rows
+            (0, 3, 6), (1, 4, 7), (2, 5, 8),  # Columns
+            (0, 4, 8), (2, 4, 6)              # Diagonals
+        ]
+        for combo in winning_combinations:
+            if self.board[combo[0]] == self.board[combo[1]] == self.board[combo[2]] != ' ':
+                return self.board[combo[0]]
+        if ' ' not in self.board:
+            return 'Draw'
+        return None
+
+    def play_game(self):
+        print("Welcome to Tic Tac Toe!")
+        print("Here is the board:")
+        self.print_board()
+        print("Player X starts.\n")
+
+        while True:
+            print(f"Player {self.current_player}'s turn:")
+            move = int(input("Enter the position to place your mark (1-9): ")) - 1
+            if move < 0 or move > 8:
+                print("Invalid position! Position should be between 1 and 9.")
+                continue
+
+            if self.make_move(move):
+                self.print_board()
+                winner = self.check_winner()
+                if winner:
+                    if winner == 'Draw':
+                        print("It's a draw!")
+                    else:
+                        print(f"Player {winner} wins!")
+                    break
+                self.switch_player()
+
+
+# Example usage
+game = TicTacToe()
+game.play_game()
